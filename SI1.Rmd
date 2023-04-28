@@ -24,14 +24,36 @@ In this report I aim to investigate the exponential distribution in R and compar
 ## Simulations
 
 text
-```{r simulations, cache=TRUE}
+```{r simulations}
+lambda <- 0.2 # the rate parameter of rexp function
+mu <- 1/lambda # mean of the exponential distribution
+sd <- 1/lambda # standard deviation of the exponential distribution
+n <- 40 # number of exponentials
+se <- sd / sqrt(n) # 
+svar <- sd^2 / n # 
+nosim <- 1000 # number of simulations
 
+set.seed(1) # to make the result reproducible
+x <- NULL
+for (i in 1:nosim) x = c(x, mean(rexp(n, lambda)))
+
+# create the X-axis grid to overlay the normal curve
+x2 <- seq(min(x), max(x), length = length(x))
+
+# create the Normal curve
+fun <- dnorm(x2, mean = mean(x), sd = sd(x))
+
+# create the Histogram of the simulation
+hist(x, prob = TRUE, # probability = true produces a density plot 
+     ylim = c(0, max(fun)),
+     main = "Histogram with normal curve")
+lines(x2, fun, col = 2, lwd = 2) 
 ```
 
 ## Sample Mean versus Theoretical Mean
 
 text
-```{r smean, cache=TRUE}
+```{r smean}
 
 ```
 
@@ -45,7 +67,7 @@ text
 ## Distribution
 
 text
-```{r distribution, message=FALSE}
+```{r distribution}
 
 ```
 
