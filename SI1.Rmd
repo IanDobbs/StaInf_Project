@@ -14,7 +14,7 @@ knitr::opts_current$get('label')
 # use captioner to add figure number and caption
 library(captioner)
 fig_nums <- captioner()
-fig_nums("figa", "A table")
+fig_nums("figa", "A histogram of the distribution of averages of 40 exponentials over 1000 simulations. Fitted with a normal curve")
 fig_nums("figb", "A table")
 ```
 ## Synopsis
@@ -24,7 +24,7 @@ In this report I aim to investigate the exponential distribution in R and compar
 ## Simulations
 
 text
-```{r simulations}
+```{r simulations, fig.cap=fig_nums("figa")}
 lambda <- 0.2 # the rate parameter of rexp function
 mu <- 1/lambda # mean of the exponential distribution
 sd <- 1/lambda # standard deviation of the exponential distribution
@@ -35,19 +35,8 @@ nosim <- 1000 # number of simulations
 
 set.seed(1) # to make the result reproducible
 x <- NULL
-for (i in 1:nosim) x = c(x, mean(rexp(n, lambda)))
-
-# create the X-axis grid to overlay the normal curve
-x2 <- seq(min(x), max(x), length = length(x))
-
-# create the Normal curve
-fun <- dnorm(x2, mean = mean(x), sd = sd(x))
-
-# create the Histogram of the simulation
-hist(x, prob = TRUE, # probability = true produces a density plot 
-     ylim = c(0, max(fun)),
-     main = "Histogram with normal curve")
-lines(x2, fun, col = 2, lwd = 2) 
+for (i in 1:nosim) x = c(x, mean(rexp(n, lambda))) # create the distribution of a large collection (1000)
+# of averages of 40 # exponentials
 ```
 
 ## Sample Mean versus Theoretical Mean
@@ -67,8 +56,24 @@ text
 ## Distribution
 
 text
-```{r distribution}
+```{r distribution, fig.cap=fig_nums("figa")}
+# create the X-axis grid to overlay the normal curve
+x2 <- seq(min(x), max(x), length = length(x))
 
+# create the Normal curve
+fun <- dnorm(x2, mean = mean(x), sd = sd(x))
+
+# create the Histogram of the simulation
+par(mfrow = c(1,2))
+hist(x, prob = TRUE, # probability = true produces a density plot 
+     ylim = c(0, max(fun)),
+     main = "", xlab = "")
+lines(x2, fun, col = 2, lwd = 2) 
+
+set.seed(1)
+y <- rexp(nosim, lambda) # create the distribution of a large collection (1000) of random exponentials
+hist(y, prob = TRUE, freq = FALSE, main = "", xlab = "")
+curve(dexp(x, rate=0.2, log=FALSE), add = TRUE)
 ```
 
 ## Conclusions
