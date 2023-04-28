@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.cap = TRUE, fig.align = "center",
-                      fig.path="figures/", options(scipen=999, digits = 2))
+                      fig.path="figures/", options(scipen=999))
 knitr::opts_current$get('label')
 ```
 ```{r captioner, message=FALSE, echo=FALSE}
@@ -23,12 +23,12 @@ In this report I aim to investigate the exponential distribution in R and compar
 
 ## Simulations
 
-text
-```{r simulations, fig.cap=fig_nums("figa")}
+This report uses the rexp(n, lambda) function in R to calculate the mean of a random sample of 40 exponentials and repeat for one thousand simulations. The sample mean and variance of the resulting distribution of averages will be compared to the theoretical mean and variance.
+```{r simulations}
 lambda <- 0.2 # the rate parameter of rexp function
 mu <- 1/lambda # mean of the exponential distribution
 sd <- 1/lambda # standard deviation of the exponential distribution
-n <- 40 # number of exponentials
+n <- 40 # number of sample exponentials
 se <- sd / sqrt(n) # 
 svar <- sd^2 / n # 
 nosim <- 1000 # number of simulations
@@ -41,9 +41,9 @@ for (i in 1:nosim) x = c(x, mean(rexp(n, lambda))) # create the distribution of 
 
 ## Sample Mean versus Theoretical Mean
 
-text
+ The sample mean and the theoretical mean are both measures of central tendency. Comparing the sample mean to the theoretical mean demonstrates that the sample mean is an estimate of the population mean.
 ```{r smean}
-
+round(c(mean(x), mu), 2)
 ```
 
 ## Sample Variance versus Theoretical Variance
@@ -68,7 +68,9 @@ par(mfrow = c(1,2))
 hist(x, prob = TRUE, # probability = true produces a density plot 
      ylim = c(0, max(fun)),
      main = "", xlab = "")
-lines(x2, fun, col = 2, lwd = 2) 
+lines(x2, fun, col = 2, lwd = 2)
+abline(v = mean(x), col="red", lwd=3, lty=2)
+abline(v = mean(mu), col="blue", lwd=3, lty=5)
 
 set.seed(1)
 y <- rexp(nosim, lambda) # create the distribution of a large collection (1000) of random exponentials
