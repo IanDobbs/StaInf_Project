@@ -10,27 +10,26 @@ knitr::opts_chunk$set(echo = TRUE, fig.cap = TRUE, fig.align = "center",
                       fig.path="figures/", options(scipen=999))
 knitr::opts_current$get('label')
 ```
-```{r captioner, message=FALSE, echo=FALSE}
+```{r captioner, message=FALSE, echo=FALSE, results='hide'}
 # use captioner to add figure number and caption
 library(captioner)
 fig_nums <- captioner()
-fig_nums("figa", "A histogram of the distribution of averages of 40 exponentials over 1000 simulations. Fitted with a normal curve")
-fig_nums("figb", "A table")
+fig_nums("figa", "On the left, a histogram of the distribution of averages of 40 exponentials over 1000 simulations. Fitted with a normal curve. The blue and red vertical lines represent the theoretical and sample means respectively. On the right is the distribution of a large collection of random exponentials ")
 ```
 ## Synopsis
 
-In this report I aim to investigate the exponential distribution in R and compare it with the Central Limit Theorem. The report will illustrate the properties of the distribution via the simulation and explanation of the distribution of the mean of 40 exponentials.
+In this report I aim to investigate the exponential distribution in R and compare it with the Central Limit Theorem. The report will illustrate the difference between the distribution of a large collection of random exponentials and the distribution of a large collection of averages 40 exponentials. It will illustrate the insight that a hypothetical distribution of sample means would be distributed normally in what is commonly referred to as a "bell curve".
 
 ## Simulations
 
 This report uses the rexp(n, lambda) function in R to calculate the mean of a random sample of 40 exponentials and repeat for one thousand simulations. The sample mean and variance of the resulting distribution of averages will be compared to the theoretical mean and variance.
 ```{r simulations}
 lambda <- 0.2 # the rate parameter of rexp function
-mu <- 1/lambda # mean of the exponential distribution
-sd <- 1/lambda # standard deviation of the exponential distribution
+mu <- 1/lambda # theoretical mean of the exponential distribution
+sd <- 1/lambda # theoretical standard deviation of the exponential distribution
 n <- 40 # number of sample exponentials
 se <- sd / sqrt(n) # 
-svar <- sd^2 / n # 
+svar <- sd^2 / n # theoretical variance
 nosim <- 1000 # number of simulations
 
 set.seed(1) # to make the result reproducible
@@ -41,21 +40,20 @@ for (i in 1:nosim) x = c(x, mean(rexp(n, lambda))) # create the distribution of 
 
 ## Sample Mean versus Theoretical Mean
 
- The sample mean and the theoretical mean are both measures of central tendency. Comparing the sample mean to the theoretical mean demonstrates that the sample mean is an estimate of the population mean.
+The normal distribution has the property that it is symmetrical about the mean. The sample mean and the theoretical mean are both measures of central tendency. Comparing the sample mean to the theoretical mean demonstrates that the sample mean is an estimate of the population mean.
 ```{r smean}
 round(c(mean(x), mu), 2)
 ```
 
 ## Sample Variance versus Theoretical Variance
 
-text
-```{r tmean}
-
+The normal distribution also has a predictable area under the curve within specified distances of the mean. Approximately 68%, 95% and 99% of the normal density lies within 1, 2 and 3 standard deviations from the mean respectively. Comparing the sample variance to the theoretical variance demonstrates that the sample variance is an estimate of the population variance.
+```{r svar}
+round(c(var(x), svar), 2)
 ```
 
 ## Distribution
 
-text
 ```{r distribution, fig.cap=fig_nums("figa")}
 # create the X-axis grid to overlay the normal curve
 x2 <- seq(min(x), max(x), length = length(x))
@@ -78,6 +76,4 @@ hist(y, prob = TRUE, freq = FALSE, main = "", xlab = "")
 curve(dexp(x, rate=0.2, log=FALSE), add = TRUE)
 ```
 
-## Conclusions
-
-text
+The Central Limit Theorem states that the distribution of averages of iid variables properly normalised becomes that of a standard normal as the sample size increases. This report has used the simulation of random exponentials to produce the distributions in Figure 1. One can determine that the distribution on the left is normally distributed because we can see it is shaped like a "bell curve". The normal distribution can be characterised by its mean and standard deviation and I have shown by calculating the sample mean and variance and comparing how close the results are to the theoretical mean and variance that they are consistent with the population mean and variance.
