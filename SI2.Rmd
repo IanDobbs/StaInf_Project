@@ -22,7 +22,7 @@ The ToothGrowth dataset shows the effect of vitamin C on tooth growth in guinea 
 
 ## Summary of the data
 
-Text here
+Load the data set ToothGrowth and display the structure of the data.
 
 ```{r ToothGrowth}
 library(datasets)
@@ -30,9 +30,16 @@ data(ToothGrowth)
 str(ToothGrowth)
 ```
 
-Text here
+Reveals a dataset with 60 observations and 3 variables as follows:
 
-```{r toothgrowth, echo=FALSE, fig.cap=fig_nums("figa")}
+* **len** is the numeric tooth length measurement (unit of measurement in unknown)
+
+* **supp** is the delivery method of Vitamin C supplement - orange juice (OJ) or ascorbic acid (VC)
+
+* **dose** is the dosage of the supplement - 0.5 ml/day, 1.0 ml/day or 2.0 ml/day
+
+A plot of the data is shown in Figure 1 below.
+```{r toothgrowth, echo=TRUE, fig.cap=fig_nums("figa")}
 library(ggplot2)
 ggplot(ToothGrowth, aes(x=factor(dose), y=len, fill=factor(dose), color=factor(dose)))+
         geom_point()+
