@@ -1,5 +1,5 @@
 ---
-title: "Basic Inferential Data Analysis - The Effect of Vitamin C on Tooth Growth in Guinea Pigs"
+title: "A Basic Inferential Data Analysis - The Effect of Vitamin C on Tooth Growth in Guinea Pigs"
 author: "Ian Dobbs"
 date: "`r Sys.Date()`"
 output: html_document
@@ -18,7 +18,7 @@ fig_nums("figa", "A scatter plot of the ToothGrowth data: length vs dose, given 
 ```
 ## Synopsis
 
-The ToothGrowth dataset shows the effect of vitamin C on tooth growth in guinea pigs. The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juice or ascorbic acid (a form of vitamin C and coded as VC).
+The ToothGrowth dataset shows the effect of vitamin C on tooth growth in guinea pigs. The response is the length of odontoblasts (cells responsible for tooth growth) in 60 guinea pigs. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juice or ascorbic acid (a form of vitamin C and coded as VC). This report will demonstrate that ... summary of findings...
 
 ## Summary of the data
 
@@ -48,6 +48,32 @@ ggplot(ToothGrowth, aes(x=factor(dose), y=len, fill=factor(dose), color=factor(d
 
 ## Hypothesis tests
 
+First need to separate the data by delivery method
+```{r dmethod}
+# Delivery of Vitamin C by Orange Juice (OJ)
+oj <- subset(ToothGrowth, supp == "OJ")
+
+# Delivery of Vitamin C by Ascorbic acid (VC)
+vc <- subset(ToothGrowth, supp == "VC")
+```
+
+Test the hypothesis that delivering vitamin C via orange juice is associated with more growth than ascorbic acid.
+```{r H1}
+t.test(oj$len, vc$len, alternative = "greater", var.equal = FALSE)
+t.test(vc$len, oj$len, alternative = "less", var.equal = FALSE)
+```
+
+Test the hypothesis that there is no statistical difference in tooth growth using either orange juice or ascorbic acid at a dose level of 2 ml/day
+```{r H2}
+oj.two <- subset(ToothGrowth, ToothGrowth$supp == "OJ" & ToothGrowth$dose == "2")
+vc.two <- subset(ToothGrowth, ToothGrowth$supp == "VC" & ToothGrowth$dose == "2")
+t.test(oj.two$len, vc.two$len, var.equal = FALSE)
+t.test(oj.two$len, vc.two$len, var.equal = FALSE)$conf.int
+```
+
 ## Conclusions
 
 ## Assumptions
+1. samples are independent and identically distributed random variables
+2. sample size is greater than 30
+3. unequal variances
